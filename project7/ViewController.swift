@@ -50,7 +50,10 @@ class ViewController: UITableViewController {
             guard let keyword = ac?.textFields?[0].text, !keyword.isEmpty else {
                 return
             }
-            self?.filterPetitions(with: keyword)
+            
+            DispatchQueue.global(qos: .background).async {
+                self?.filterPetitions(with: keyword)
+            }
         }
                 
                 ac.addAction(filterAction)
@@ -66,7 +69,10 @@ class ViewController: UITableViewController {
     
     func filterPetitions(with keyword: String) {
           filteredPetitions = petitions.filter { $0.title.lowercased().contains(keyword.lowercased()) || $0.body.lowercased().contains(keyword.lowercased()) }
-          tableView.reloadData()
+        
+        DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
       }
     
     func parse(json: Data) {
